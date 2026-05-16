@@ -1,0 +1,63 @@
+# SOTA Baselines Config: ACNE04
+# Run: python run_sota_baselines.py --config acne04_sota.yaml
+# Experiments: Focal Loss, Class-Balanced Loss (Cui et al.), Zein Proxy
+
+# --- Paths ---
+real_root: /mnt/wd-ssd-4tb/acne_classifiers/datasets/image_restructured_acne04_anonymized
+fake_root: /mnt/wd-ssd-4tb/acne_classifiers/datasets/sg2_gen/acne04_images_fake_50k
+real_subdir: all
+benchmark_dir: /mnt/wd-ssd-4tb/acne_classifiers/experiments/benchmark-acne04-2025
+
+exp_root: /mnt/wd-ssd-4tb/acne_classifiers/experiments/2026_sota_baselines/acne04
+tmp_parent: /mnt/wd-ssd-4tb/tmp
+
+# --- Dataset settings ---
+class_ids: [0, 1, 2, 3]
+count_range: [0, 150]
+seed: 42
+fitness_metric: f1_macro_sane
+allow_legacy_f1_fallback: false
+
+# --- Champions (for reference, used in Zein comparison context) ---
+ablation:
+  champions:
+    - name: g2_i4
+      dna: [112, 89, 44, 0]
+      optimizer: GA
+    - name: bo_72
+      dna: [1, 28, 0, 0]
+      optimizer: BO
+
+# --- Focal Loss settings ---
+focal:
+  gamma: 2.0
+
+# --- Class-Balanced Loss settings (Cui et al. CVPR 2019) ---
+class_balanced:
+  beta: 0.9999
+
+# --- Zein Proxy settings ---
+# Per-class synthetic counts from Zein et al. (PLOS ONE 2024)
+# Healthy: 1387, Mild: 841, Moderate: 1173, Severe: 1086
+# Mapped to our classes: 0=Healthy, 1=Mild, 2=Moderate, 3=Severe
+zein_proxy:
+  enabled: true
+  counts: [1387, 841, 1173, 1086]
+
+# --- Trainer settings (same as optimizer runs) ---
+trainer_module: train_script_224
+trainer_kwargs:
+  sigma: 3.0
+  lam: 0.6
+  eval_head: combined
+  img_size: 224
+  resize_size: 256
+  train_bs: 32
+  eval_bs: 20
+  num_workers: 8
+  lr: 0.001
+  lr_steps: [30, 60, 90]
+  patience: 20
+  save_epoch_csvs: false
+  save_detail_csvs: false
+  save_weights: false

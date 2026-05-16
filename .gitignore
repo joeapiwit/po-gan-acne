@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Model weights & checkpoints
+*.pth
+*.pkl
+*.pt
+weights/
+save_weights/
+
+# Experiment logs
+mlruns/
+logs/
+logs_csv/
+restart_logs*/
+*.log
+
+# Data (images downloaded separately)
+data/acne04/
+data/acnescu/
+data/images/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/

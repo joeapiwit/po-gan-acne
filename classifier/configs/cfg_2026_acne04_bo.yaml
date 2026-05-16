@@ -1,0 +1,55 @@
+# Auto-generated 2026 sane-metric optimizer config
+# Dataset: acne04
+# Algorithm: bo
+# Budget: 160 candidate evaluations
+#
+# Run:
+#   python optimize_ldl.py --config cfg_2026_acne04_bo.yaml
+#
+# Resume:
+#   python optimize_ldl.py --config cfg_2026_acne04_bo.yaml --resume
+
+dataset: acne04
+
+# dataset roots
+real_root: /mnt/wd-ssd-4tb/acne_classifiers/datasets/image_restructured_acne04_anonymized
+fake_root: /mnt/wd-ssd-4tb/acne_classifiers/datasets/sg2_gen/acne04_images_fake_50k
+real_subdir: all
+class_ids: [0, 1, 2, 3]
+seed: 42
+count_range: [0, 150]
+
+# strict sane metric for optimizer fitness
+fitness_metric: f1_macro_sane
+allow_legacy_f1_fallback: false
+
+# Type 1 benchmark mode:
+# per-fold benchmark from baseline eval_ldl.csv
+benchmark_dir: /mnt/wd-ssd-4tb/acne_classifiers/experiments/benchmark-acne04-2025
+
+trainer_module: train_script_224
+trainer_kwargs:
+  sigma: 3.0
+  lam: 0.6
+  eval_head: combined
+  img_size: 224
+  resize_size: 256
+  train_bs: 32
+  eval_bs: 20
+  num_workers: 8
+  lr: 0.001
+  lr_steps: [30, 60, 90]
+  patience: 20
+  save_epoch_csvs: false
+  save_detail_csvs: false
+  save_weights: false
+
+# output
+exp_root: /mnt/wd-ssd-4tb/acne_classifiers/experiments/2026_ldl_sane_metric_160/acne04_bo_160_2026
+tmp_parent: /mnt/wd-ssd-4tb/tmp
+
+algorithm: bo
+bo:
+  n_calls: 160
+  seed: 42
+  acq_func: EI

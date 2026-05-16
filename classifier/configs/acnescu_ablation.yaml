@@ -1,0 +1,46 @@
+# Baseline Ablation Config: AcneSCU
+# Run: python run_baseline_ablation.py --config acnescu_ablation.yaml
+
+# --- Paths ---
+real_root: /mnt/wd-ssd-4tb/acne_classifiers/datasets/image_restructured_acnescu
+fake_root: /mnt/wd-ssd-4tb/acne_classifiers/datasets/sg2_gen/acnescu_images_fake_50k
+real_subdir: null
+benchmark_dir: /mnt/wd-ssd-4tb/acne_classifiers/experiments/benchmark-acneSCU-2025
+
+exp_root: /mnt/wd-ssd-4tb/acne_classifiers/experiments/2026_baseline_ablation/acnescu
+tmp_parent: /mnt/wd-ssd-4tb/tmp
+
+# --- Dataset settings ---
+class_ids: [0, 1, 2, 3]
+count_range: [0, 150]
+seed: 42
+fitness_metric: f1_macro_sane
+allow_legacy_f1_fallback: false
+
+# --- Champions to test with real oversampling ---
+ablation:
+  champions:
+    - name: g2_i5
+      dna: [110, 4, 54, 44]
+      optimizer: GA
+    - name: bo_22
+      dna: [112, 0, 7, 108]
+      optimizer: BO
+
+# --- Trainer settings (same as optimizer runs) ---
+trainer_module: train_script_224
+trainer_kwargs:
+  sigma: 3.0
+  lam: 0.6
+  eval_head: combined
+  img_size: 224
+  resize_size: 256
+  train_bs: 32
+  eval_bs: 20
+  num_workers: 8
+  lr: 0.001
+  lr_steps: [30, 60, 90]
+  patience: 20
+  save_epoch_csvs: false
+  save_detail_csvs: false
+  save_weights: false
