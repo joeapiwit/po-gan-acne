@@ -11,6 +11,8 @@ build/
 *.pkl
 *.pt
 weights/
+!weights/README.md
+!weights/README.md
 save_weights/
 
 # Experiment logs
