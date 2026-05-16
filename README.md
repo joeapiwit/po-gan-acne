@@ -108,11 +108,16 @@ python optimization/run_baseline_ablation.py --config configs/acnescu_ablation.y
 
 ## Key Results
 
-| Method | ACNE04 Val F1 | AcneSCU Val F1 |
-|--------|:---:|:---:|
-| Real-only Baseline | 0.8211 | 0.4408 |
-| PO-GAN (GA champion) | 0.8244 | 0.5046 |
-| PO-GAN (BO champion) | 0.8231 | 0.4889 |
+| Method | ID | ACNE04 Val F1 | ACNE04 Test F1 | AcneSCU Val F1 | AcneSCU Test F1 |
+|--------|----|:---:|:---:|:---:|:---:|
+| Real-only Baseline | -- | 0.8242 | **0.7847** | 0.4408 | 0.4033 |
+| Focal Loss | -- | -- | 0.7816 | -- | 0.3950 |
+| CB Re-weight | -- | -- | 0.7788 | -- | 0.5047 |
+| Zein Proxy | -- | -- | 0.7388 | -- | 0.4553 |
+| PO-GAN (GA) | g2_i4 / g2_i5 | 0.8223 | 0.7778 | 0.6041 | **0.5263** |
+| PO-GAN (BO) | bo_72 / bo_22 | 0.8303 | 0.7768 | 0.6173 | 0.5241 |
+
+All values are macro-F1 (f1_macro_sane: NaN→0, always /4 classes). Val F1 selects champions; Test F1 is reported once at the best validation epoch. Champions: ACNE04 uses g2_i4 (GA) and bo_72 (BO); AcneSCU uses g2_i5 (GA) and bo_22 (BO).
 
 ## Citation
 
