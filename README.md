@@ -1,10 +1,11 @@
-# PO-GAN: Policy-Optimized Generative Augmentation Network for Acne Severity Classification
+# PO-GAN: Policy Optimized Generative Augmentation for Imbalanced Acne Severity Classification
 
 Official code for the paper:
 
-> **Safe Synthetic Augmentation Policy Selection for Acne Severity Classification Using Label Distribution Learning**
+> **PO-GAN: Policy Optimized Generative Augmentation for Imbalanced Acne Severity Classification**
 > Apiwit Puangsricharern and Suppawong Tuarob
 > Faculty of Information and Communication Technology, Mahidol University
+> Submitted to ACM Transactions on Computing for Healthcare (HEALTH), 2026
 
 ## Overview
 
@@ -119,14 +120,29 @@ python optimization/run_baseline_ablation.py --config configs/acnescu_ablation.y
 
 All values are macro-F1 (f1_macro_sane: NaN→0, always /4 classes). Val F1 selects champions; Test F1 is reported once at the best validation epoch. Champions: ACNE04 uses g2_i4 (GA) and bo_72 (BO); AcneSCU uses g2_i5 (GA) and bo_22 (BO).
 
+### Real Oversampling (RealOS) Ablation
+
+To isolate whether the benefit comes from the *allocation policy* or from the *synthetic images themselves*, each champion allocation vector is re-run with the synthetic pool replaced by duplicated real training images at identical per-class counts. Only the source of the augmentation images changes.
+
+| Method | ACNE04 Test F1 | AcneSCU Test F1 | AcneSCU folds improved |
+|--------|:---:|:---:|:---:|
+| Real-only Baseline | 0.7847 | 0.4033 | -- |
+| RealOS (GA counts `[110,4,54,44]`) | 0.7728 | 0.5093 | 3 / 5 |
+| RealOS (BO counts `[112,0,7,108]`) | 0.7868 | 0.4919 | 3 / 5 |
+| **PO-GAN (GA)** | 0.7778 | **0.5263** | **5 / 5** |
+| **PO-GAN (BO)** | 0.7768 | 0.5241 | **5 / 5** |
+
+Key finding: on AcneSCU both methods lift the mean, but they diverge by fold. On the two *strong* folds (benchmark macro-F1 ≥ 0.50), PO-GAN gains +0.022 on average while RealOS **loses** −0.097 (fold 1: −0.167). On the three *weak* folds (benchmark < 0.40), both help substantially. PO-GAN improves all 5 folds; RealOS improves only 3 of 5. Duplicated real images help a data-starved classifier but can hurt when the baseline is already reasonable, whereas synthetic images add new variety without that cost. Reproduce with `run_baseline_ablation.py` (step 4 above).
+
 ## Citation
 
 ```bibtex
 @article{puangsricharern2026pogan,
-  title={Safe Synthetic Augmentation Policy Selection for Acne Severity Classification Using Label Distribution Learning},
+  title={PO-GAN: Policy Optimized Generative Augmentation for Imbalanced Acne Severity Classification},
   author={Puangsricharern, Apiwit and Tuarob, Suppawong},
   journal={ACM Transactions on Computing for Healthcare},
-  year={2026}
+  year={2026},
+  note={Under review}
 }
 ```
 
